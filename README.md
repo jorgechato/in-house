@@ -15,13 +15,14 @@ $ go run main.go
 ### Build image
 
 ```bash
-$ docker build -t in-house .
+$ docker build -t <docker-hub-username>/in-house .
 # run
-$ docker run --rm -p 5000:5000 in-house
+$ docker run --rm -p 5000:5000 <docker-hub-username>/in-house
 ```
 
 ### Push to docker hub
 
 ```bash
-$ docker login 
+$ docker login
+$ docker push <docker-hub-username>/in-house
 ```
