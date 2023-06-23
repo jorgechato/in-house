@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: golang-workflow-
+  labels:
+    workflows.argoproj.io/archive-strategy: "false"
+  annotations:
+    workflows.argoproj.io/description: |
+      This is a simple golang api deployment with approval.
+      You can check the project in https://github.com/jorgechato/in-house
+spec:
+  entrypoint: golang-workflow
+  templates:
+    - name: golang-workflow
+      steps:
+        - - name: deploy-pre-prod
+            template: deployment
+        - - name: approval
+            template: approval
+        - - name: deploy-prod
+            when: '{{steps.approval.outputs.parameters.approve}} == YES'
+            template: deployment
+
+    - name: deployment
+      container:
+        # image: orggue/in-house
+        # command: [/opt/server]
+        image: alpine
+        command: [sh, -c]
+        args: ["echo 1"]
+
+    - name: approval
+      suspend: {}
+      inputs:
+        parameters:
+           - name: approve
+             default: 'NO'
+             enum:
+                - 'YES'
+                - 'NO'
+      outputs:
+        parameters:
+          - name: approve
+            valueFrom:
+              supplied: {}
