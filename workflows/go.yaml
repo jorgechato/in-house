@@ -27,7 +27,7 @@ spec:
         # command: [/opt/server]
         image: alpine
         command: [sh, -c]
-        args: ["echo 1"]
+        args: ["echo 'service deployed'"]
 
     - name: approval
       suspend: {}
